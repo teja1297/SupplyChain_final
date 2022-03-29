@@ -33,24 +33,24 @@ string public x   = "PharmaSupplyChain Contarct";
     
 
    //gets the list of userKeys
-   function getUserList() public view returns(address[] memory UserList)
+   function getUserList() external view returns(address[] memory UserList)
    {
       return supplyChainStorage.getUserKeyList();
    }
    //gets the list of DrugKeys
-   function getDrugList() public view returns(address[] memory DrugKeyList){
+   function getDrugList() external view returns(address[] memory DrugKeyList){
       return supplyChainStorage.getDrugKeyList();
    }
 
    
-    function getnextOwner(address _SerialNumber) public view returns(string memory Owner)
+    function getnextOwner(address _SerialNumber) external view returns(string memory Owner)
     {
        (Owner) = supplyChainStorage.getnextOwner(_SerialNumber);
        return (Owner);
     }
 
 
-      function getUserRole(address _userAddress)public view returns(string memory){
+      function getUserRole(address _userAddress)external view returns(string memory){
          return supplyChainStorage.getUserRole(_userAddress);
       }
 
@@ -61,7 +61,7 @@ string public x   = "PharmaSupplyChain Contarct";
                          string memory _Username,
                          string memory _password,
                         string memory _Email,
-                     bool _isActive) public returns(bool){
+                     bool _isActive) external returns(bool){
 
                        bool result = supplyChainStorage.setUser(_userAddress,_ParticipantName,_contactNo,_role,_Username,_password,_Email,_isActive);
                        
@@ -78,7 +78,7 @@ string public x   = "PharmaSupplyChain Contarct";
         uint _expTimeStamp,
         uint32  _CurrentTemperature,
         uint32 _IdealTemperature
-     ) public  returns(address){
+     ) external  returns(address){
          address SerialNumber = supplyChainStorage.setDrugDetails(_drugID,_batchID,_drugName,_Currentlocation,_mfgTimeStamp,_expTimeStamp,_CurrentTemperature,_IdealTemperature);
           emit addDrug(msg.sender, SerialNumber); 
           return SerialNumber;
@@ -90,7 +90,7 @@ string public x   = "PharmaSupplyChain Contarct";
                              address _ExporterAddress,
                              uint32  _ExportingTemparature
                             
-                             )public isValidPerformer(_SerialNumber,'Manufacturer')  returns(bool){
+                             )external isValidPerformer(_SerialNumber,'Manufacturer')  returns(bool){
 
                                 bool result =  supplyChainStorage.MoveFromManufacturer(_SerialNumber,_name,_ManufacturerAddress, _ExporterAddress,_ExportingTemparature);
                                 emit MovedFromManufacturer(msg.sender,_SerialNumber);
@@ -98,7 +98,7 @@ string public x   = "PharmaSupplyChain Contarct";
                              }
 
 
-        function receivedToDistributor(address _SerialNumber, string memory _name,string memory _DistributorAddress,uint32 _ImportingTemparature)public  returns(bool){
+        function receivedToDistributor(address _SerialNumber, string memory _name,string memory _DistributorAddress,uint32 _ImportingTemparature)external  returns(bool){
                return supplyChainStorage.distributorReceving(_SerialNumber,_name,_DistributorAddress,_ImportingTemparature);
         }
 
@@ -106,7 +106,7 @@ string public x   = "PharmaSupplyChain Contarct";
 function MoveFromDistributor(address _SerialNumber,
         uint32 _ExportingTemparature,
        address _ExporterAddress
-        ) public isValidPerformer(_SerialNumber,'Distributor') returns(bool){
+        ) external isValidPerformer(_SerialNumber,'Distributor') returns(bool){
 
              bool result =  supplyChainStorage.MoveFromDistributor(_SerialNumber, _ExportingTemparature,_ExporterAddress);
                                 emit MovedFromDistributor(msg.sender,_SerialNumber);
@@ -115,7 +115,7 @@ function MoveFromDistributor(address _SerialNumber,
 
 
 
-        function receivedToWholeSaler(address _SerialNumber, string memory _name,string memory _WholesalerAddress,uint32 _ImportingTemparature)public  returns(bool){
+        function receivedToWholeSaler(address _SerialNumber, string memory _name,string memory _WholesalerAddress,uint32 _ImportingTemparature)external  returns(bool){
                return supplyChainStorage.WholeSalerReceving(_SerialNumber,_name,_WholesalerAddress,_ImportingTemparature);
         }
 
@@ -123,7 +123,7 @@ function MoveFromDistributor(address _SerialNumber,
 function MoveFromWholesaler(address _SerialNumber,
         uint32 _ExportingTemparature,
         address _ExporterAddress
-        ) public isValidPerformer(_SerialNumber,'Wholesaler') returns(bool){
+        ) external isValidPerformer(_SerialNumber,'Wholesaler') returns(bool){
 
              bool result =  supplyChainStorage.moveFromWholesaler(_SerialNumber, _ExportingTemparature,_ExporterAddress);
                                 emit MovedFromWholesaler(msg.sender,_SerialNumber);
@@ -135,20 +135,20 @@ function MoveFromWholesaler(address _SerialNumber,
 function importToPharmacy(address _SerialNumber,
         string memory _PharmacyName,
         string memory _PharmacyAddress,
-        uint32 _ImportingTemparature) public isValidPerformer(_SerialNumber,'Pharmacy') returns(bool){
+        uint32 _ImportingTemparature) external isValidPerformer(_SerialNumber,'Pharmacy') returns(bool){
             bool result = supplyChainStorage.importToPharmacy(_SerialNumber,_PharmacyName,_PharmacyAddress,_ImportingTemparature);
             emit MovedToPharmacy(msg.sender,_SerialNumber);
             return result;
         }
 
-        function Authenticate(string memory _username, string memory _password,address _userAddress)public view returns(bool){
+        function Authenticate(string memory _username, string memory _password,address _userAddress)external view returns(bool){
          return supplyChainStorage.Authenticate(_username,_password,_userAddress);
         }
 
 
 
 
-        function UserDetails(address _userAddress)public view returns(string memory ParticipantName,
+        function UserDetails(address _userAddress)external view returns(string memory ParticipantName,
         string memory contactNo,
         bool isActive,
         string memory UserName,
@@ -159,7 +159,7 @@ function importToPharmacy(address _SerialNumber,
       
 
 
-        function ManufacturerDetails(address _SerialNumber)public view returns(string memory name,
+        function ManufacturerDetails(address _SerialNumber)external view returns(string memory name,
         string memory ManufacturerAddress,
         address ExporterAddress,
         uint32 ExportingTemparature,
@@ -168,7 +168,7 @@ function importToPharmacy(address _SerialNumber,
      return supplyChainStorage.BatchManufactureringDetails(_SerialNumber);
         }
 
-        function DistributorDetails(address _SerialNumber) public view returns( string memory name,
+        function DistributorDetails(address _SerialNumber) external view returns( string memory name,
         string memory DistributorAddress,
         uint32 ImportingTemparature,
         uint32 ExportingTemparature,
@@ -179,7 +179,7 @@ function importToPharmacy(address _SerialNumber,
            return supplyChainStorage.BatchdistributorDetails(_SerialNumber);
         }
 
-        function WholesalerDetails(address _SerialNumber) public view returns(string memory name,
+        function WholesalerDetails(address _SerialNumber) external view returns(string memory name,
         string memory WholesalerAddress,
         uint32 ImportingTemparature,
         uint32 ExportingTemparature,
@@ -190,7 +190,7 @@ function importToPharmacy(address _SerialNumber,
            return supplyChainStorage.BatchWholesalerDetails(_SerialNumber);
         }
 
-         function PharmacyDetails(address _SerialNumber) public view returns( string memory PharmacyName,
+         function PharmacyDetails(address _SerialNumber) external view returns( string memory PharmacyName,
         string memory PharmacyAddress,
         uint32 ImportingTemparature,
         string memory DrugStatus,
@@ -199,7 +199,7 @@ function importToPharmacy(address _SerialNumber,
         }
          
 
-         function getDrugDetails1(address _SerialNumber) public  view returns(uint32 _drugID,
+         function getDrugDetails1(address _SerialNumber) external  view returns(uint32 _drugID,
         uint32 _batchID,
         string memory _drugName,
         string memory _Currentlocation,
@@ -211,7 +211,7 @@ function importToPharmacy(address _SerialNumber,
 
       }
 
- function getDrugDetails2(address _SerialNumber) public  view returns(address _CurrentproductOwner,
+ function getDrugDetails2(address _SerialNumber) external  view returns(address _CurrentproductOwner,
         uint _mfgTimeStamp,
         uint _expTimeStamp,
         uint32  _CurrentTemperature,
@@ -223,10 +223,16 @@ function importToPharmacy(address _SerialNumber,
 
       }
 
+      function changeOwner(address newOwner) external{
+         supplyChainStorage.changeOwner(newOwner);
+      }
 
 
-        function test() public view returns(string memory){
+
+        function test() external view returns(string memory){
            return x;
         }
 
 }
+//0x30E295F911e5cA6cE1AF977A204850260d39fF5c
+
