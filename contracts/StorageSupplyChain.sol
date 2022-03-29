@@ -149,7 +149,8 @@ address public owner;
     }  
     
 
-    function setDrugDetails(uint32 _drugID,
+    function setDrugDetails(
+        uint32 _drugID,
         uint32 _batchID,
         string memory _drugName,
         string memory _Currentlocation,
@@ -157,7 +158,7 @@ address public owner;
         uint _expTimeStamp,
         uint32  _CurrentTemperature,
         uint32 _IdealTemperature
-     ) public onlyOwner  returns(address){
+     ) public onlyManufacturer returns(address){
 
          uint tmpData = uint(keccak256(abi.encodePacked(msg.sender, block.timestamp )));
         address SerialNumber = address(tmpData);
@@ -412,7 +413,10 @@ function importToPharmacy(address _SerialNumber,
         require(tx.origin == owner);
         _;
     }
-
+   modifier onlyManufacturer(){
+require(keccak256(abi.encodePacked(getUserRole(tx.origin))) == keccak256(abi.encodePacked("Manufacturer")));
+        _;
+   }
     modifier onlyDrugOwner(address _SerialNumber){
         require(BatchDrugDetails[_SerialNumber].CurrentproductOwner == tx.origin);
         _;
@@ -454,10 +458,11 @@ function isBad(address _SerialNumber,uint32 Temparature) internal returns(bool){
         return true;
 
     }
+    function changeOwner(address newOwner) public onlyOwner{
+        owner = newOwner;
+    }
 
 }
 
 
-
-
-//1646246054
+//0xf2fE6fB022B92eDa6D8c3A8e9d0986cc3E4dD823
